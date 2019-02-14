@@ -1,0 +1,31 @@
+{
+  "name": "nodejs-training",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "babel src/app.js -d dist",
+    "start": "npm run build && nodemon dist/app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BatiushkovNikita/nodejs-training.git"
+  },
+  "author": "Nikita Batsiushkou",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/BatiushkovNikita/nodejs-training/issues"
+  },
+  "homepage": "https://github.com/BatiushkovNikita/nodejs-training#readme",
+  "dependencies": {},
+  "devDependencies": {
+    "@babel/core": "^7.2.2",
+    "@babel/preset-env": "^7.3.1",
+    "@babel/preset-stage-2": "^7.0.0",
+    "@babel/register": "^7.0.0",
+    "nodemon": "^1.18.10"
+  }
+}
+
+https://github.com/babel/example-node-server
