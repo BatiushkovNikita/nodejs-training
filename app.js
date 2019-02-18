@@ -1,9 +1,11 @@
-import {Product, User} from './exports';
-import DirWatcher from './watcher/dirwatcher';
+import DirWatcher from './event/dirwatcher';
+import Importer from './event/importer';
 
-new Product();
-new User();
-
+const path = './data';
+const delay = 3000;
+const importer = new Importer();
 const watcher = new DirWatcher();
 
-watcher.watch('./data', 2000);
+watcher.watch(path, delay);
+importer.import(path);
+//importer.importSync(path);
