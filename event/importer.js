@@ -1,15 +1,21 @@
-import eventEmitter from 'events';
 import emitter from './emitter';
+import csv from 'csvtojson';
 
 export default class Importer {
 
-    //const ss = () => console.log('got it');
-
-    //eventEmitter.on('changed', (() => console.log('got it')));​
+    handleChangedEvent() {
+        emitter.on('changed', event => {
+            console.log('changed: ' + event.path);
+            this.import(event.path);
+            this.importSync(event.path);
+        });
+    }
 
     import(path) {
         // should return a ​promise ​​with imported data from fileat ​path
-        emitter.on('changed', e => {console.log(e);});
+        csv().fromFile(path).then(value => {
+           console.log(value);
+        });
 
     }
 
@@ -17,6 +23,3 @@ export default class Importer {
         // should be synchronous and return all importeddata from file at ​path
     }
 }
-
-//const alert = () => {console.log('got it');};
-//emitter.on('changed', e => {console.log(e);});
