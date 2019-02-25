@@ -1,5 +1,6 @@
 import emitter from './emitter';
 import csv from 'csvtojson';
+import fs from 'fs';
 
 export default class Importer {
 
@@ -12,14 +13,20 @@ export default class Importer {
     }
 
     import(path) {
-        // should return a ​promise ​​with imported data from fileat ​path
-        csv().fromFile(path).then(value => {
-           console.log(value);
-        });
-
+        return csv().fromFile(path)
+            .then(data => {
+                console.info('async import');
+                console.info(data);
+            })
+            .catch(reason => console.error(reason));
     }
 
     importSync(path) {
-        // should be synchronous and return all importeddata from file at ​path
+        return csv().fromString(fs.readFileSync(path).toString())
+            .then(data => {
+                console.info('sync import');
+                console.info(data);
+            })
+            .catch(reason => console.error(reason));
     }
 }

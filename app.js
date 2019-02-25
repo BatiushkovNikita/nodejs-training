@@ -8,5 +8,6 @@ const watcher = new DirWatcher();
 
 watcher.watch(path, delay);
 importer.handleChangedEvent();
-//importer.import(path);
-//importer.importSync(path);
+
+//importer.import('./data/data01.csv');
+//importer.importSync('./data/data01.csv');
