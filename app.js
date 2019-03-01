@@ -11,11 +11,3 @@ const watcher = new DirWatcher();
 
 //importer.import('./data/data01.csv');
 //importer.importSync('./data/data01.csv');
-
-let list = '3, 4, 5'.split(',');
-let list2 = '1, 2, 3'.split(',');
-
-let newList = list2.filter(value => value >= 2);
-
-
-console.log(newList);
