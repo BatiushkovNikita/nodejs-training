@@ -18,8 +18,8 @@ const resultPath = './data/css/​bundle.css';
 const appendixPath = './data/css/nodejs-homework3.css';
 
 
-function reverse(str) {
-    str
+function reverse() {
+    process.stdin
         .pipe(through(function (buffer, encodding, done) {
             this.push(util.reverse(buffer));
             done();
@@ -28,8 +28,8 @@ function reverse(str) {
         .pipe(process.stdout);
 }
 
-function transform(str) {
-    str
+function transform() {
+    process.stdin
         .pipe(through(function (buffer, encodding, done) {
             this.push(util.toUpperCase(buffer));
             done();
@@ -69,27 +69,20 @@ function convertToFile(filePath) {
 }
 
 function cssBundler(filePath) {
-    console.log(filePath);
     readdir(filePath)
         .then(files => {
-            files.forEach(fileName => {
-                appendToResult(filePath + '/' + fileName);
+            files.map(fileName => {
+                readFile(filePath + '/' + fileName)
+                    .then(content => {
+                        appendFile(resultPath, content);
+                    });
             });
-            appendToResult(appendixPath);
+            readFile(appendixPath)
+                .then(content => {
+                    appendFile(resultPath, content);
+                });
         })
         .catch(console.error);
-}
-
-function appendToResult(filePath) {
-    readFile(filePath)
-        .then(content => {
-            appendFile(resultPath, content);
-        });
-}
-
-function call(action, value) {
-    if (!value) program.help();
-    action(value);
 }
 
 function start() {
@@ -109,21 +102,16 @@ function start() {
         })
         .parse(process.argv);
 
-    if (program.action === 'reverse') {
-        reverse(process.stdin);
-    } else if (program.action === 'transform') {
-        transform(process.stdin);
-    } else if (program.action === 'outputFile') {
-        call(outputFile, program.file);
-    } else if (program.action === 'convertFromFile') {
-        call(convertFromFile, program.file);
-    } else if (program.action === 'convertToFile') {
-        call(convertToFile, program.file);
-    } else if (program.action === 'cssBundler') {
-        call(cssBundler, program.path);
-    } else {
-        program.help();
-    }
+    const actions = {
+        'reverse': reverse,
+        'transform': transform,
+        'outputFile': outputFile,
+        'convertFromFile': convertFromFile,
+        'convertToFile': convertToFile,
+        'cssBundler': cssBundler
+    };
+
+    actions[program.action](program.file ? program.file : program.path ? program.path : program.help());
 }
 
 start();
