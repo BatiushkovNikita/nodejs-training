@@ -1,0 +1,22 @@
+[
+  {
+    "id": "001",
+    "name": "name1",
+    "quantity": "1",
+    "reviews": [
+      {
+        "id": "1",
+        "description": "description1"
+      },
+      {
+        "id": "2",
+        "description": "description2"
+      }
+    ]
+  },
+  {
+    "id": "002",
+    "name": "name2",
+    "quantity": "2"
+  }
+]

@@ -72,17 +72,19 @@ function cssBundler(filePath) {
     readdir(filePath)
         .then(files => {
             files.map(fileName => {
-                readFile(filePath + '/' + fileName)
-                    .then(content => {
-                        appendFile(resultPath, content);
-                    });
+                appendToResult(filePath + '/' + fileName);
             });
-            readFile(appendixPath)
-                .then(content => {
-                    appendFile(resultPath, content);
-                });
+            let promise = appendToResult(appendixPath);
+            console.log(promise);
         })
         .catch(console.error);
+}
+
+function appendToResult(filePath) {
+    return readFile(filePath)
+        .then(content => {
+            appendFile(resultPath, content);
+        });
 }
 
 function start() {
