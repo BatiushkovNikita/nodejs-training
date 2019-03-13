@@ -8,5 +8,9 @@
     "id": "002",
     "name": "name2",
     "role": "employee"
+  },
+  {
+    "email": "username@gmail.com",
+    "username": "username"
   }
 ]

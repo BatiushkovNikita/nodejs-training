@@ -20,6 +20,7 @@ import cookieParser from './middlewares/cookie-parser';
 import queryParser from './middlewares/query-parser';
 import productRouter from './routes/product';
 import userRouter from './routes/user';
+import authRouter from './routes/auth';
 
 
 export default class App {
@@ -32,5 +33,6 @@ export default class App {
         app.use(queryParser);
         app.use('/api/products', productRouter);
         app.use('/api/users', userRouter);
+        app.use('/auth', authRouter);
     }
 }
