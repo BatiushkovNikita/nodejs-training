@@ -71,18 +71,20 @@ function convertToFile(filePath) {
 function cssBundler(filePath) {
     readdir(filePath)
         .then(files => {
-            files.map(fileName => {
-                readFile(filePath + '/' + fileName)
-                    .then(content => {
-                        appendFile(resultPath, content);
-                    });
+            let promiseList = files.map(fileName => {
+                return appendToResult(filePath + '/' + fileName);
             });
-            readFile(appendixPath)
-                .then(content => {
-                    appendFile(resultPath, content);
-                });
+            return promiseList;
         })
+        .then(() => appendToResult(appendixPath))
         .catch(console.error);
+}
+
+function appendToResult(filePath) {
+    return readFile(filePath)
+        .then(content => {
+            appendFile(resultPath, content);
+        });
 }
 
 function start() {
