@@ -24,10 +24,7 @@ router.route('/')
     });
 
 router.param('id', (req, res, next, id) => {
-    let product = productsData.find(function (o) {
-        return o.id === id;
-    });
-    req.product = product;
+    req.product = productsData.find((o) => o.id === id);
     next();
 });
 

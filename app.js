@@ -25,12 +25,12 @@ import userRouter from './routes/user';
 export default class App {
 
     listen(port, cb) {
-        app.listen(port, cb);
-
         app.use(express.json());
         app.use(cookieParser);
         app.use(queryParser);
         app.use('/api/products', productRouter);
         app.use('/api/users', userRouter);
+
+        app.listen(port, cb);
     }
 }

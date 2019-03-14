@@ -71,12 +71,12 @@ function convertToFile(filePath) {
 function cssBundler(filePath) {
     readdir(filePath)
         .then(files => {
-            files.map(fileName => {
-                appendToResult(filePath + '/' + fileName);
+            let promiseList = files.map(fileName => {
+                return appendToResult(filePath + '/' + fileName);
             });
-            let promise = appendToResult(appendixPath);
-            console.log(promise);
+            return promiseList;
         })
+        .then(() => appendToResult(appendixPath))
         .catch(console.error);
 }
 
