@@ -15,9 +15,9 @@ const local = () => {
             passwordField: 'email'
         },
         (username, password, done) => {
-            let user = usersData.find((user) => {
-                return user.email === password && user.username === username;
-            });
+            let user = usersData.find((user) =>
+                user.email === password && user.username === username
+            );
             if (user !== undefined) {
                 done(null, user);
             } else {
@@ -33,9 +33,7 @@ const facebook = () => {
             callbackURL: "http://localhost:3000/auth/facebook/callback"
         },
         (accessToken, refreshToken, profile, cb) => {
-            User.findOrCreate({facebookId: profile.id}, function (err, user) {
-                return cb(err, user);
-            });
+            User.findOrCreate({facebookId: profile.id}, cb);
         }
     ));
 };
@@ -47,9 +45,7 @@ const twitter = () => {
             callbackURL: "http://127.0.0.1:3000/auth/twitter/callback"
         },
         (token, tokenSecret, profile, cb) => {
-            User.findOrCreate({twitterId: profile.id}, function (err, user) {
-                return cb(err, user);
-            });
+            User.findOrCreate({twitterId: profile.id}, cb);
         }
     ));
 };
@@ -62,9 +58,7 @@ const googleOAuth = () => {
             passReqToCallback: true
         },
         (request, accessToken, refreshToken, profile, done) => {
-            User.findOrCreate({googleId: profile.id}, function (err, user) {
-                return done(err, user);
-            });
+            User.findOrCreate({googleId: profile.id}, done);
         }
     ));
 };
