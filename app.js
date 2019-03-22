@@ -25,9 +25,18 @@ import jwt from './middlewares/jwt-verification';
 import auth from './auth/auth-strategy';
 import passport from 'passport';
 
+import models from './models';
+const User = models.User;
+
+//import user from './models/User';
+
+
 export default class App {
 
     listen(port, cb) {
+        this.initBackend();
+
+
         app.use(passport.initialize());
         app.use(passport.session());
         auth.local();
@@ -44,5 +53,21 @@ export default class App {
         app.use('/auth', authRouter);
 
         app.listen(port, cb);
+    }
+
+    initBackend() {
+        console.log(User);
+/*        User.create({
+            id: '1'
+        }).then(() => console.log('Worked!'));*/
+/*
+        console.log('1212');
+        Product.create({
+            id: '001',
+            name: 'namename'
+        }).then(() => console.log('Worked!'));
+*/
+
+
     }
 }
