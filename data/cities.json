@@ -1,0 +1,74 @@
+[
+  {
+    "name": "Brest",
+    "country": "Belarus",
+    "capital": false,
+    "location": {
+      "lat": 52.097621,
+      "long": 23.734050
+    }
+  },
+  {
+    "name": "Minsk",
+    "country": "Belarus",
+    "capital": true,
+    "location": {
+      "lat": 53.54,
+      "long": 27.34
+    }
+  },
+  {
+    "name": "Prague",
+    "country": "Czech Republic",
+    "capital": true,
+    "location": {
+      "lat": 50.05,
+      "long": 14.25
+    }
+  },
+  {
+    "name": "Pardubice",
+    "country": "Czech Republic",
+    "capital": false,
+    "location": {
+      "lat": 50.02,
+      "long": 15.46
+    }
+  },
+  {
+    "name": "Tirana",
+    "country": "Albania",
+    "capital": true,
+    "location": {
+      "lat": 41.19,
+      "long": 19.49
+    }
+  },
+  {
+    "name": "Durrës",
+    "country": "Albania",
+    "capital": false,
+    "location": {
+      "lat": 41.18,
+      "long": 19.26
+    }
+  },
+  {
+    "name": "Vlorë",
+    "country": "Albania",
+    "capital": false,
+    "location": {
+      "lat": 40.27,
+      "long": 19.29
+    }
+  },
+  {
+    "name": "Elbasan",
+    "country": "Albania",
+    "capital": false,
+    "location": {
+      "lat": 41.06,
+      "long": 20.04
+    }
+  }
+]
