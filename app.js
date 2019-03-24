@@ -58,12 +58,12 @@ export default class App {
     importProducts() {
         readFile('./data/products.json')
             .then(value => JSON.parse(value.toString()))
-            .then(values => values.forEach(value => {
+            .then(values => values.map(value => {
                 Product.count({id: value.id}).then(count => {
                     if (count === 0) {
                         Product.create(value).then(product => {
                             if (value.reviews) {
-                                value.reviews.forEach(review => {
+                                value.reviews.map(review => {
                                     Review.count({id: review.id}).then(count => {
                                         if (count === 0) {
                                             product.createReview({
@@ -89,7 +89,7 @@ export default class App {
     importUsers() {
         readFile('./data/users.json')
             .then(value => JSON.parse(value.toString()))
-            .then(values => values.forEach(value => {
+            .then(values => values.map(value => {
                 User.count({id: value.id}).then(count => {
                     if (count === 0) {
                         User.create(value)
