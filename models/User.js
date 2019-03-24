@@ -1,14 +1,18 @@
-import Sequelize from 'sequelize';
-
 module.exports = (sequelize, DataTypes) => {
-    const user = sequelize.define('users', {
+    const User = sequelize.define('User', {
         id: {
-            type: Sequelize.INTEGER,
+            type: DataTypes.STRING,
             primaryKey: true
-        }
-    }, {});
-    user.associate = (models) => {
+        },
+        name: DataTypes.STRING,
+        role: DataTypes.STRING,
+        email: DataTypes.STRING,
+        username: DataTypes.STRING
+    }, {
+        tableName: 'users'
+    });
+    User.associate = function (models) {
         // associations can be defined here
     };
-    return user;
+    return User;
 };

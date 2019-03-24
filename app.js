@@ -25,17 +25,17 @@ import jwt from './middlewares/jwt-verification';
 import auth from './auth/auth-strategy';
 import passport from 'passport';
 
-import models from './models';
-const User = models.User;
-
-//import user from './models/User';
-
+import {User, Product, Review} from './models';
+import uuid from 'uuid/v1';
+import fs from 'fs';
+import {promisify} from 'util';
+const readFile = promisify(fs.readFile);
 
 export default class App {
 
     listen(port, cb) {
-        this.initBackend();
-
+        this.importUsers();
+        this.importProducts();
 
         app.use(passport.initialize());
         app.use(passport.session());
@@ -55,19 +55,50 @@ export default class App {
         app.listen(port, cb);
     }
 
-    initBackend() {
-        console.log(User);
-/*        User.create({
-            id: '1'
-        }).then(() => console.log('Worked!'));*/
-/*
-        console.log('1212');
-        Product.create({
-            id: '001',
-            name: 'namename'
-        }).then(() => console.log('Worked!'));
-*/
+    importProducts() {
+        readFile('./data/products.json')
+            .then(value => JSON.parse(value.toString()))
+            .then(values => values.forEach(value => {
+                Product.count({id: value.id}).then(count => {
+                    if (count === 0) {
+                        Product.create(value).then(product => {
+                            if (value.reviews) {
+                                value.reviews.forEach(review => {
+                                    Review.count({id: review.id}).then(count => {
+                                        if (count === 0) {
+                                            product.createReview({
+                                                id: review.id,
+                                                description: review.description
+                                            });
+                                        } else {
+                                            console.log("Record with id: %s already exists", review.id);
+                                        }
+                                    });
+                                });
+                            }
+                            return product;
+                        }).then(product => console.log("Product record created. Id: %s", product.id));
+                    } else {
+                        console.log("Record with id: %s already exists", value.id);
+                    }
+                });
+            }))
+            .catch(console.error);
+    }
 
-
+    importUsers() {
+        readFile('./data/users.json')
+            .then(value => JSON.parse(value.toString()))
+            .then(values => values.forEach(value => {
+                User.count({id: value.id}).then(count => {
+                    if (count === 0) {
+                        User.create(value)
+                            .then(user => console.log("User record created. Id: %s", user.id));
+                    } else {
+                        console.log("Record with id: %s already exists", value.id);
+                    }
+                });
+            }))
+            .catch(console.error);
     }
 }
