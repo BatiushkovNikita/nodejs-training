@@ -1,6 +1,5 @@
 import express from "express";
 import CityMongo from '../../models/nosql/City';
-import ProductMongo from "../../models/nosql/Product";
 
 const router = express.Router();
 
@@ -21,25 +20,17 @@ router.route('/')
 
 router.put('/:id', (req, res) => {
     console.log('Updates ​SINGLE city by ​id if exists or adds NEW ​city with the given ​id​ otherwise');
-    console.log(req.body);
-    ProductMongo.findOneAndUpdate(
+    CityMongo.findOneAndUpdate(
         {_id: req.params.id},
-        {$set: req.body},
-        {
-            upsert: true,
-            new: true,
-        }
-    ).exec()
-        .then(value => {
-            console.log(value);
-            return res.sendStatus(200);
-        })
+        req.body,
+        {upsert: true})
+        .then(value => res.sendStatus(200))
         .catch(console.error);
 });
 
 router.delete('/:id', (req, res) => {
     console.log('Deletes ​SINGLE​ city');
-    ProductMongo.deleteOne({_id: req.params.id})
+    CityMongo.deleteOne({_id: req.params.id})
         .then(value => res.sendStatus(200))
         .catch(console.error);
 });

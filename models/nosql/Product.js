@@ -1,6 +1,5 @@
 import mongoose from 'mongoose';
-import config from '../../config/config';
-mongoose.connect(config.mongo.url);
+import util from '../../utils/utils';
 
 let schema = new mongoose.Schema({
     id: {
@@ -26,7 +25,16 @@ let schema = new mongoose.Schema({
                 type: String
             }
         }
-    ]
+    ],
+    lastModifiedDate: {
+        type: Date
+    }
+
+});
+
+// https://stackoverflow.com/questions/37365038/this-is-undefined-in-a-mongoose-pre-save-hook
+schema.pre('validate', function (next) {
+    util.updateDate(next, this);
 });
 
 module.exports = mongoose.model('Product', schema);

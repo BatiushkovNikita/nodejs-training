@@ -31,6 +31,7 @@ import fs from 'fs';
 import {promisify} from 'util';
 
 const readFile = promisify(fs.readFile);
+import initMongo from './database/mongoose';
 import {MongoClient} from 'mongodb';
 import config from './config/config';
 import CityMongo from './models/nosql/City';
@@ -43,9 +44,10 @@ import cityMongoRouter from './routes/mongo/city';
 export default class App {
 
     listen(port, cb) {
+        initMongo();
         //this.importUsers();
         //this.importProducts();
-        //this.importMongo();
+        this.importMongo();
 
         app.use(passport.initialize());
         app.use(passport.session());
