@@ -44,6 +44,9 @@
     "sequelize": "^5.1.0",
     "sequelize-cli": "^5.4.0",
     "stream": "0.0.2",
+    "swagger": "^0.7.5",
+    "swagger-cli": "^2.2.1",
+    "swagger-editor": "^3.6.27",
     "through2": "^3.0.0",
     "uuid": "^3.3.2"
   }

@@ -1,0 +1,331 @@
+swagger: "2.0"
+info:
+  version: "0.0.1"
+  title: Nodejs Training API
+# during dev, should point to your local machine
+host: localhost:10010
+# basePath prefixes all resource paths 
+basePath: /api
+# 
+schemes:
+  # tip: remove http to make production-grade
+  - http
+  - https
+# format of bodies a client can send (Content-Type)
+consumes:
+  - application/json
+# format of the responses to the client (Accepts)
+produces:
+  - application/json
+tags:
+- name: products
+  description: products
+- name: users
+  description: users
+- name: cities
+  description: cities
+paths:
+  /products:
+    x-swagger-router-controller: ProductController
+    get:
+      operationId: getAllProducts
+      tags:
+      - products
+      description: Return ALL products
+      responses:
+        200:
+          description: Success
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Product'
+        400:
+          description: Failure
+    post:
+      tags:
+      - products
+      description: Add NEW product and return it
+      parameters:
+      - in: body
+        required: true
+        name: user
+        description: user
+        schema:
+          $ref: '#/definitions/Product'
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/Product'
+        400:
+          description: Failure
+  /products/id:
+    get:
+      tags:
+      - products
+      description: Return SINGLE product
+      parameters:
+      - in: query
+        name: id
+        description: product id
+        required: true
+        type: string
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/Product'
+        400:
+          description: Failure
+    delete:
+      tags:
+      - products
+      description: Deletes SINGLE product
+      parameters:
+      - in: query
+        name: id
+        description: product id
+        required: true
+        type: string
+      responses:
+        200:
+          description: Success
+        400:
+          description: Failure
+  /products/id/reviwes:
+    get:
+      tags:
+      - products
+      description: Return ALL reviews for single product
+      parameters:
+      - in: query
+        name: id
+        description: product id
+        required: true
+        type: string
+      responses:
+        200:
+          description: Success
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Review'
+
+        400:
+          description: Failure
+  /users:
+    get:
+      tags:
+      - users
+      description: Return ALL users
+      responses:
+        200:
+          description: Success
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/User'
+        400:
+          description: Failure
+  /users/id:
+    delete:
+      tags:
+      - users
+      description: Deletes SINGLE user
+      parameters:
+      - in: query
+        name: id
+        description: user id
+        required: true
+        type: string
+      responses:
+        200:
+          description: Success
+        400:
+          description: Failure
+  /cities:
+    x-swagger-router-controller: CityController
+    get:
+      operationId: getAllCities
+      tags:
+      - cities
+      description: Return ALL cities
+      responses:
+        200:
+          description: Success
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/City'
+        400:
+          description: Failure
+    post:
+      tags:
+      - cities
+      description: Add NEW city and return it
+      parameters:
+      - in: body
+        required: true
+        name: user
+        description: user
+        schema:
+          $ref: '#/definitions/City'
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/City'
+        400:
+          description: Failure
+  /cities/id:
+    put:
+      tags:
+      - cities
+      description: Updates SINGLE city by id if exists or adds NEW city with the given id otherwise
+      parameters:
+      - in: query
+        required: true
+        name: id
+        description: city id
+        type: string
+      - in: body
+        required: true
+        name: city
+        description: city
+        schema:
+          $ref: '#/definitions/City'
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/City'
+        400:
+          description: Failure
+    delete:
+      tags:
+      - cities
+      description: Deletes SINGLE city
+      parameters:
+      - in: query
+        name: id
+        description: city id
+        required: true
+        type: string
+      responses:
+        200:
+          description: Success
+        400:
+          description: Failure
+  
+  /hello:
+    # binds a127 app logic to a route
+    x-swagger-router-controller: hello_world
+    get:
+      description: Returns 'Hello' to the caller
+      # used as the method name of the controller
+      operationId: hello
+      parameters:
+        - name: name
+          in: query
+          description: The name of the person to whom to say hello
+          required: false
+          type: string
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/HelloWorldResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /swagger:
+    x-swagger-pipe: swagger_raw
+# complex objects have schema definitions
+definitions:
+  City:
+    type: object
+    properties:
+      name:
+        type: string
+        example: Minsk
+      country:
+        type: string
+        example: Belarus
+      capital:
+        type: boolean
+      location:
+        type: object
+        properties:
+          lat:
+            type: number
+            example: 56.6353
+          long:
+            type: number
+            example: 44.178
+  Review:
+    type: object
+    properties:
+      id:
+        type: string
+        format: uuid
+      description:
+        type: string
+        example: Nice product
+
+  Product:
+    type: object
+    required:
+    - id
+    - name
+    - quantity
+    properties:
+      id:
+        type: string
+        format: uuid
+      name:
+        type: string
+        example: T-Shirt
+      quantity:
+        type: number
+        example: 42
+      reviews:
+        type: array
+        items:
+          $ref: '#/definitions/Review'
+  User:
+    type: object
+    required:
+    - email
+    - username
+    properties:
+      id:
+        type: string
+        format: uuid
+      name:
+        type: string
+        example: Vasya
+      role:
+        type: string
+        example: boss
+      email:
+        type: string
+        format: email
+      username:
+        type: string
+        example: VasyaBoss123
+        
+  HelloWorldResponse:
+    required:
+      - message
+    properties:
+      message:
+        type: string
+  ErrorResponse:
+    required:
+      - message
+    properties:
+      message:
+        type: string
