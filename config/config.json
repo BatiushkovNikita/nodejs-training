@@ -21,5 +21,9 @@
     "database": "database_production",
     "host": "127.0.0.1",
     "dialect": "mysql"
+  },
+  "mongo": {
+    "url": "mongodb://localhost:27017/nodejs_training",
+    "dbName": "nodejs_training"
   }
 }

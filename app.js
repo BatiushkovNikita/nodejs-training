@@ -29,13 +29,25 @@ import {User, Product, Review} from './models';
 import uuid from 'uuid/v1';
 import fs from 'fs';
 import {promisify} from 'util';
+
 const readFile = promisify(fs.readFile);
+import initMongo from './database/mongoose';
+import {MongoClient} from 'mongodb';
+import config from './config/config';
+import CityMongo from './models/nosql/City';
+import UserMongo from './models/nosql/User';
+import ProductMongo from './models/nosql/Product';
+import productMongoRouter from './routes/mongo/product';
+import userMongoRouter from './routes/mongo/user';
+import cityMongoRouter from './routes/mongo/city';
 
 export default class App {
 
     listen(port, cb) {
-        this.importUsers();
-        this.importProducts();
+        initMongo();
+        //this.importUsers();
+        //this.importProducts();
+        this.importMongo();
 
         app.use(passport.initialize());
         app.use(passport.session());
@@ -48,9 +60,13 @@ export default class App {
         app.use(cookieParser);
         app.use(queryParser);
 
-        app.use('/api/products', jwt.authCustom, productRouter);
-        app.use('/api/users', jwt.authCustom, userRouter);
+        //app.use('/api/products', jwt.authCustom, productRouter);
+        //app.use('/api/users', jwt.authCustom, userRouter);
         app.use('/auth', authRouter);
+
+        app.use('/api/products', productMongoRouter);
+        app.use('/api/users', userMongoRouter);
+        app.use('/api/cities', cityMongoRouter);
 
         app.listen(port, cb);
     }
@@ -100,5 +116,44 @@ export default class App {
                 });
             }))
             .catch(console.error);
+    }
+
+    importCitiesNative() {
+        let database;
+        MongoClient.connect(config.mongo.url)
+            .then(db => {
+                database = db;
+                return db.db(config.mongo.dbName);
+            })
+            .then(dbo => dbo.collection('cities'))
+            .then(conn => readFile('./data/cities.json')
+                .then(value => JSON.parse(value.toString()))
+                .then(cities => {
+                    conn.drop();
+                    return conn.insertMany(cities);
+                })
+                .then(res => console.log("Number of documents inserted: %d", res.insertedCount))
+            )
+            .catch(console.error)
+            .finally(() => database.close());
+    }
+
+    importFromFile(path, model) {
+        readFile(path)
+            .then(value => JSON.parse(value.toString()))
+            .then(records => {
+                    return model.deleteMany({})
+                        .then(() => console.log("%s records removed", model.modelName))
+                        .then(() => records);
+                }
+            )
+            .then(records => records.map(record => new model(record).save()))
+            .catch((reason) => console.error('Error' + reason));
+    }
+
+    importMongo() {
+        this.importFromFile('./data/cities.json', CityMongo);
+        this.importFromFile('./data/products.json', ProductMongo);
+        this.importFromFile('./data/users.json', UserMongo);
     }
 }
