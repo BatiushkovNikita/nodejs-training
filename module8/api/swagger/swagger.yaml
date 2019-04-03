@@ -42,14 +42,15 @@ paths:
         400:
           description: Failure
     post:
+      operationId: addProduct
       tags:
       - products
       description: Add NEW product and return it
       parameters:
       - in: body
         required: true
-        name: user
-        description: user
+        name: product
+        description: product
         schema:
           $ref: '#/definitions/Product'
       responses:
@@ -59,13 +60,15 @@ paths:
             $ref: '#/definitions/Product'
         400:
           description: Failure
-  /products/id:
+  /products/{id}:
+    x-swagger-router-controller: ProductController
     get:
+      operationId: getProduct
       tags:
       - products
       description: Return SINGLE product
       parameters:
-      - in: query
+      - in: path
         name: id
         description: product id
         required: true
@@ -78,11 +81,12 @@ paths:
         400:
           description: Failure
     delete:
+      operationId: deleteProduct
       tags:
       - products
       description: Deletes SINGLE product
       parameters:
-      - in: query
+      - in: path
         name: id
         description: product id
         required: true
@@ -92,13 +96,15 @@ paths:
           description: Success
         400:
           description: Failure
-  /products/id/reviwes:
+  /products/{id}/reviwes:
+    x-swagger-router-controller: ProductController
     get:
+      operationId: getReviews
       tags:
       - products
       description: Return ALL reviews for single product
       parameters:
-      - in: query
+      - in: path
         name: id
         description: product id
         required: true
@@ -114,7 +120,9 @@ paths:
         400:
           description: Failure
   /users:
+    x-swagger-router-controller: UserController
     get:
+      operationId: getAllUsers
       tags:
       - users
       description: Return ALL users
@@ -127,13 +135,15 @@ paths:
               $ref: '#/definitions/User'
         400:
           description: Failure
-  /users/id:
+  /users/{id}:
+    x-swagger-router-controller: UserController
     delete:
+      operationId: deleteUser
       tags:
       - users
       description: Deletes SINGLE user
       parameters:
-      - in: query
+      - in: path
         name: id
         description: user id
         required: true
@@ -160,14 +170,15 @@ paths:
         400:
           description: Failure
     post:
+      operationId: addCity
       tags:
       - cities
       description: Add NEW city and return it
       parameters:
       - in: body
         required: true
-        name: user
-        description: user
+        name: city
+        description: city
         schema:
           $ref: '#/definitions/City'
       responses:
@@ -177,13 +188,15 @@ paths:
             $ref: '#/definitions/City'
         400:
           description: Failure
-  /cities/id:
+  /cities/{id}:
+    x-swagger-router-controller: CityController
     put:
+      operationId: saveCity
       tags:
       - cities
       description: Updates SINGLE city by id if exists or adds NEW city with the given id otherwise
       parameters:
-      - in: query
+      - in: path
         required: true
         name: id
         description: city id
@@ -202,11 +215,12 @@ paths:
         400:
           description: Failure
     delete:
+      operationId: deleteCity
       tags:
       - cities
       description: Deletes SINGLE city
       parameters:
-      - in: query
+      - in: path
         name: id
         description: city id
         required: true
@@ -216,31 +230,6 @@ paths:
           description: Success
         400:
           description: Failure
-  
-  /hello:
-    # binds a127 app logic to a route
-    x-swagger-router-controller: hello_world
-    get:
-      description: Returns 'Hello' to the caller
-      # used as the method name of the controller
-      operationId: hello
-      parameters:
-        - name: name
-          in: query
-          description: The name of the person to whom to say hello
-          required: false
-          type: string
-      responses:
-        "200":
-          description: Success
-          schema:
-            # a pointer to a definition
-            $ref: "#/definitions/HelloWorldResponse"
-        # responses may fall through to errors
-        default:
-          description: Error
-          schema:
-            $ref: "#/definitions/ErrorResponse"
   /swagger:
     x-swagger-pipe: swagger_raw
 # complex objects have schema definitions
@@ -248,6 +237,8 @@ definitions:
   City:
     type: object
     properties:
+      _id:
+        type: string
       name:
         type: string
         example: Minsk
@@ -282,6 +273,8 @@ definitions:
     - name
     - quantity
     properties:
+      _id:
+        type: string
       id:
         type: string
         format: uuid
@@ -297,10 +290,9 @@ definitions:
           $ref: '#/definitions/Review'
   User:
     type: object
-    required:
-    - email
-    - username
     properties:
+      _id:
+        type: string
       id:
         type: string
         format: uuid
@@ -316,16 +308,3 @@ definitions:
       username:
         type: string
         example: VasyaBoss123
-        
-  HelloWorldResponse:
-    required:
-      - message
-    properties:
-      message:
-        type: string
-  ErrorResponse:
-    required:
-      - message
-    properties:
-      message:
-        type: string

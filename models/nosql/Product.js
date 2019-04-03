@@ -1,5 +1,5 @@
-import mongoose from 'mongoose';
-import util from '../../utils/utils';
+const mongoose = require('mongoose');
+const util = require('../../utils/utils');
 
 let schema = new mongoose.Schema({
     id: {
