@@ -1,0 +1,310 @@
+swagger: "2.0"
+info:
+  version: "0.0.1"
+  title: Nodejs Training API
+# during dev, should point to your local machine
+host: localhost:10010
+# basePath prefixes all resource paths 
+basePath: /api
+# 
+schemes:
+  # tip: remove http to make production-grade
+  - http
+  - https
+# format of bodies a client can send (Content-Type)
+consumes:
+  - application/json
+# format of the responses to the client (Accepts)
+produces:
+  - application/json
+tags:
+- name: products
+  description: products
+- name: users
+  description: users
+- name: cities
+  description: cities
+paths:
+  /products:
+    x-swagger-router-controller: ProductController
+    get:
+      operationId: getAllProducts
+      tags:
+      - products
+      description: Return ALL products
+      responses:
+        200:
+          description: Success
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Product'
+        400:
+          description: Failure
+    post:
+      operationId: addProduct
+      tags:
+      - products
+      description: Add NEW product and return it
+      parameters:
+      - in: body
+        required: true
+        name: product
+        description: product
+        schema:
+          $ref: '#/definitions/Product'
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/Product'
+        400:
+          description: Failure
+  /products/{id}:
+    x-swagger-router-controller: ProductController
+    get:
+      operationId: getProduct
+      tags:
+      - products
+      description: Return SINGLE product
+      parameters:
+      - in: path
+        name: id
+        description: product id
+        required: true
+        type: string
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/Product'
+        400:
+          description: Failure
+    delete:
+      operationId: deleteProduct
+      tags:
+      - products
+      description: Deletes SINGLE product
+      parameters:
+      - in: path
+        name: id
+        description: product id
+        required: true
+        type: string
+      responses:
+        200:
+          description: Success
+        400:
+          description: Failure
+  /products/{id}/reviwes:
+    x-swagger-router-controller: ProductController
+    get:
+      operationId: getReviews
+      tags:
+      - products
+      description: Return ALL reviews for single product
+      parameters:
+      - in: path
+        name: id
+        description: product id
+        required: true
+        type: string
+      responses:
+        200:
+          description: Success
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Review'
+
+        400:
+          description: Failure
+  /users:
+    x-swagger-router-controller: UserController
+    get:
+      operationId: getAllUsers
+      tags:
+      - users
+      description: Return ALL users
+      responses:
+        200:
+          description: Success
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/User'
+        400:
+          description: Failure
+  /users/{id}:
+    x-swagger-router-controller: UserController
+    delete:
+      operationId: deleteUser
+      tags:
+      - users
+      description: Deletes SINGLE user
+      parameters:
+      - in: path
+        name: id
+        description: user id
+        required: true
+        type: string
+      responses:
+        200:
+          description: Success
+        400:
+          description: Failure
+  /cities:
+    x-swagger-router-controller: CityController
+    get:
+      operationId: getAllCities
+      tags:
+      - cities
+      description: Return ALL cities
+      responses:
+        200:
+          description: Success
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/City'
+        400:
+          description: Failure
+    post:
+      operationId: addCity
+      tags:
+      - cities
+      description: Add NEW city and return it
+      parameters:
+      - in: body
+        required: true
+        name: city
+        description: city
+        schema:
+          $ref: '#/definitions/City'
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/City'
+        400:
+          description: Failure
+  /cities/{id}:
+    x-swagger-router-controller: CityController
+    put:
+      operationId: saveCity
+      tags:
+      - cities
+      description: Updates SINGLE city by id if exists or adds NEW city with the given id otherwise
+      parameters:
+      - in: path
+        required: true
+        name: id
+        description: city id
+        type: string
+      - in: body
+        required: true
+        name: city
+        description: city
+        schema:
+          $ref: '#/definitions/City'
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/City'
+        400:
+          description: Failure
+    delete:
+      operationId: deleteCity
+      tags:
+      - cities
+      description: Deletes SINGLE city
+      parameters:
+      - in: path
+        name: id
+        description: city id
+        required: true
+        type: string
+      responses:
+        200:
+          description: Success
+        400:
+          description: Failure
+  /swagger:
+    x-swagger-pipe: swagger_raw
+# complex objects have schema definitions
+definitions:
+  City:
+    type: object
+    properties:
+      _id:
+        type: string
+      name:
+        type: string
+        example: Minsk
+      country:
+        type: string
+        example: Belarus
+      capital:
+        type: boolean
+      location:
+        type: object
+        properties:
+          lat:
+            type: number
+            example: 56.6353
+          long:
+            type: number
+            example: 44.178
+  Review:
+    type: object
+    properties:
+      id:
+        type: string
+        format: uuid
+      description:
+        type: string
+        example: Nice product
+
+  Product:
+    type: object
+    required:
+    - id
+    - name
+    - quantity
+    properties:
+      _id:
+        type: string
+      id:
+        type: string
+        format: uuid
+      name:
+        type: string
+        example: T-Shirt
+      quantity:
+        type: number
+        example: 42
+      reviews:
+        type: array
+        items:
+          $ref: '#/definitions/Review'
+  User:
+    type: object
+    properties:
+      _id:
+        type: string
+      id:
+        type: string
+        format: uuid
+      name:
+        type: string
+        example: Vasya
+      role:
+        type: string
+        example: boss
+      email:
+        type: string
+        format: email
+      username:
+        type: string
+        example: VasyaBoss123

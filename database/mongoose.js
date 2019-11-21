@@ -1,5 +1,5 @@
-import mongoose from 'mongoose';
-import config from '../config/config';
+const mongoose = require('mongoose');
+const config = require('../config/config');
 
 const initMongo = () => {
     mongoose.connect(config.mongo.url);
